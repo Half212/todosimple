@@ -1,5 +1,6 @@
 package com.aquilesleite.todosimple.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -68,7 +69,7 @@ public class User {
     public void setUsername(@NotBlank(groups = CreateUser.class) @Size(groups = CreateUser.class, min = 2, max = 100) String username) {
         this.username = username;
     }
-
+     @JsonIgnore
     public List<Task> getTasks() {
         return tasks;
     }
