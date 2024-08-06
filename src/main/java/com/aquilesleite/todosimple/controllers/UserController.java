@@ -2,7 +2,6 @@ package com.aquilesleite.todosimple.controllers;
 
 import com.aquilesleite.todosimple.models.User;
 import com.aquilesleite.todosimple.services.UserService;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
