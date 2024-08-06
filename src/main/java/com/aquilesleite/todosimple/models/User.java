@@ -84,7 +84,7 @@ public class User {
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof User user))
+        if (!(obj instanceof User ))
             return false;
         User other = (User) obj;
         if (this.id == null)
