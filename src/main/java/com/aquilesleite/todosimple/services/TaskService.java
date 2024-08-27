@@ -3,6 +3,9 @@ package com.aquilesleite.todosimple.services;
 import com.aquilesleite.todosimple.models.Task;
 import com.aquilesleite.todosimple.models.User;
 import com.aquilesleite.todosimple.repositories.TaskRepository;
+import com.aquilesleite.todosimple.services.exceptions.DataBindingViolationException;
+import com.aquilesleite.todosimple.services.exceptions.ObjectNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +24,7 @@ public class TaskService {
 
     public Task findById(Long id) {
         Optional<Task> task = this.taskRepository.findById(id);
-        return task.orElseThrow(() -> new RuntimeException("tarefa não encontada ! id:" + id + ", Tipo: " + Task.class.getName()));
+        return task.orElseThrow(() -> new ObjectNotFoundException("tarefa não encontada ! id:" + id + ", Tipo: " + Task.class.getName()));
     }
 
     public List<Task> findAllByUserId (Long userId){
@@ -49,7 +52,7 @@ public class TaskService {
         try {
             this.taskRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("não é possivel excluir,pois ha entidades relacionadas");
+            throw new DataBindingViolationException("não é possivel excluir,pois ha entidades relacionadas");
         }
     }
 
