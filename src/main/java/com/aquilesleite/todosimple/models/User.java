@@ -1,6 +1,7 @@
 package com.aquilesleite.todosimple.models;
 
 
+import com.aquilesleite.todosimple.models.enums.ProfileEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -14,7 +15,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = User.TABLE_NAME)
@@ -41,7 +45,7 @@ public class User {
     private String username;
 
     @JsonProperty(access = Access.WRITE_ONLY)
-    @Column(name = "password",length = 50,nullable = false)
+    @Column(name = "password",length = 100,nullable = false)
     @NotBlank(groups = {CreateUser.class,UpdateUser.class})
     @Size(groups = {CreateUser.class,UpdateUser.class}, min=8,max=50)
     private String password;
@@ -50,6 +54,19 @@ public class User {
     @JsonProperty(access = Access.WRITE_ONLY)
     private List<Task> tasks = new ArrayList<>();
 
-    
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @CollectionTable(name="user_profile")
+    @Column(name = "profile", nullable = false)
+    private Set<Integer> profiles = new HashSet<>();
+
+    public Set<ProfileEnum> getProfiles(){
+        return this.profiles.stream().map(x -> ProfileEnum.toEnum(x)).collect(Collectors.toSet());
+    }
+
+    public void addProfile(ProfileEnum profileEnum){
+        this.profiles.add(profileEnum.getCode()); 
+    }
+
 }
 
