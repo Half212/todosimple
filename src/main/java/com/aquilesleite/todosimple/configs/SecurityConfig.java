@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,6 +21,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.aquilesleite.todosimple.security.JWTAuthenticationFilter;
 import com.aquilesleite.todosimple.security.JWTUtil;
 
 @Configuration
@@ -61,7 +60,8 @@ public class SecurityConfig {
                 http.authorizeRequests(requests -> requests
                                 .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
                                 .antMatchers(PUBLIC_MATCHERS).permitAll()
-                                .anyRequest().authenticated());
+                                .anyRequest().authenticated().and().authenticationManager(authenticationManager));
+                http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));          
 
                 http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

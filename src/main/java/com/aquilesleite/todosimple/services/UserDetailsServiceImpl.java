@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.aquilesleite.todosimple.models.User;
 import com.aquilesleite.todosimple.repositories.UserRepository;
-import com.aquilesleite.todosimple.security.UserSprinSecurity;
+import com.aquilesleite.todosimple.security.UserSpringSecurity;
 
 
 
@@ -27,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = this.userRepository.findByUsername(username);
         if (Objects.isNull(user))
         throw new UsernameNotFoundException("Usuario não encontrado: "+ username);
-        return new UserSprinSecurity(user.getId(), user.getUsername(), user.getPassword(), user.getProfiles());
+        return new UserSpringSecurity(user.getId(), user.getUsername(), user.getPassword(), user.getProfiles());
     }
     
 }
