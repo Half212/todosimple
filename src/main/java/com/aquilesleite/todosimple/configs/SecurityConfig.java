@@ -22,6 +22,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.aquilesleite.todosimple.security.JWTAuthenticationFilter;
+import com.aquilesleite.todosimple.security.JWTAuthorizationFilter;
 import com.aquilesleite.todosimple.security.JWTUtil;
 
 @Configuration
@@ -54,14 +55,16 @@ public class SecurityConfig {
                 AuthenticationManagerBuilder authenticationManagerBuilder = http
                                 .getSharedObject(AuthenticationManagerBuilder.class);
                 authenticationManagerBuilder.userDetailsService(this.userDetailsService)
-                .passwordEncoder(bCryptPasswordEncoder()) ;
+                                .passwordEncoder(bCryptPasswordEncoder());
                 this.authenticationManager = authenticationManagerBuilder.build();
 
                 http.authorizeRequests(requests -> requests
                                 .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
                                 .antMatchers(PUBLIC_MATCHERS).permitAll()
                                 .anyRequest().authenticated().and().authenticationManager(authenticationManager));
-                http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));          
+
+                http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
+                http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil, this.userDetailsService));
 
                 http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
