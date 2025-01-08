@@ -1,6 +1,8 @@
 package com.aquilesleite.todosimple.services;
 
 import com.aquilesleite.todosimple.models.User;
+import com.aquilesleite.todosimple.models.dto.UserCreateDTO;
+import com.aquilesleite.todosimple.models.dto.UserUpdateDTO;
 import com.aquilesleite.todosimple.models.enums.ProfileEnum;
 import com.aquilesleite.todosimple.repositories.UserRepository;
 import com.aquilesleite.todosimple.security.UserSpringSecurity;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -74,6 +77,19 @@ public class UserService {
         } catch (Exception e) {
             return null;
         }
+    }
+    public User fromDTO (@Valid UserCreateDTO obj){
+        User user = new User();
+        user.setUsername(obj.getUsername());
+        user.setPassword(obj.getPassword());
+        return user;
+    }
+
+    public User fromDTO (@Valid UserUpdateDTO obj) {
+        User user = new User();
+        user.setId(obj.getId());
+        user.setPassword(obj.getPassword());
+        return user;
     }
 
 }

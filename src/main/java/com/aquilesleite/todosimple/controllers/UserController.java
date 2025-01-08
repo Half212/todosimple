@@ -1,13 +1,13 @@
 package com.aquilesleite.todosimple.controllers;
-
 import com.aquilesleite.todosimple.models.User;
+import com.aquilesleite.todosimple.models.dto.UserCreateDTO;
+import com.aquilesleite.todosimple.models.dto.UserUpdateDTO;
 import com.aquilesleite.todosimple.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -27,18 +27,20 @@ public class UserController {
     }
 
     @PostMapping
-    @Validated(User.CreateUser.class)
-    public ResponseEntity<Void> create(@Valid @RequestBody User obj) {
-        this.userService.create(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(obj.getId()).toUri();
+    public ResponseEntity<Void> create(@Valid @RequestBody UserCreateDTO obj) {
+        User user = this.userService.fromDTO(obj);
+        User newUser =this.userService.create(user);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+        .path("/{id}").buildAndExpand(newUser.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{id}")
-    @Validated (User.UpdateUser.class)
-    public ResponseEntity<Void> update (@Valid @RequestBody User obj, @PathVariable Long id){
+    @Valid
+        public ResponseEntity<Void> update (@Valid @RequestBody UserUpdateDTO obj, @PathVariable Long id){
         obj.setId(id);
-        this.userService.update(obj);
+        User user = this.userService.fromDTO(obj);
+        this.userService.update(user);
         return ResponseEntity.noContent().build();
     }
 

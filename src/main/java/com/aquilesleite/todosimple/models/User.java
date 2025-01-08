@@ -6,10 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -24,13 +22,10 @@ import java.util.stream.Collectors;
 @Table(name = User.TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 
 public class User {
-    public interface CreateUser {}
-    public interface UpdateUser {}
+  
 
     public static final String TABLE_NAME = "user";
 
@@ -40,14 +35,14 @@ public class User {
     private Long id;
 
     @Column(name= "username",length=100,nullable = false,unique = true)
-    @NotBlank(groups = CreateUser.class)
-    @Size(groups = CreateUser.class, min =2, max=100)
+    @NotBlank()
+    @Size(min =2, max=100)
     private String username;
 
     @JsonProperty(access = Access.WRITE_ONLY)
     @Column(name = "password",length = 100,nullable = false)
-    @NotBlank(groups = {CreateUser.class,UpdateUser.class})
-    @Size(groups = {CreateUser.class,UpdateUser.class}, min=8,max=50)
+    @NotBlank()
+    @Size(min=8,max=50)
     private String password;
 
     @OneToMany(mappedBy = "user")
